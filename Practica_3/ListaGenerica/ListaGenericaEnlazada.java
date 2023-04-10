@@ -199,4 +199,5 @@ public class ListaGenericaEnlazada<T> extends ListaGenerica<T> {
 		invGenerico(ListaInvertida);
 		return ListaInvertida;
 	}
+
 }

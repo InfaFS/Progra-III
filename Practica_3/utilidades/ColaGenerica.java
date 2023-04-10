@@ -42,5 +42,7 @@ public class ColaGenerica <T> {
 			return false;
 		}
 		
+
 	}
+
 }
