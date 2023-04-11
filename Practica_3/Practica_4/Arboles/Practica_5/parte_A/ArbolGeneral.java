@@ -2,7 +2,6 @@ package Practica_4.Arboles.Practica_5.parte_A;
 
 import ListaGenerica.ListaGenerica;
 import ListaGenerica.ListaGenericaEnlazada;
-
 import utilidades.ColaGenerica;
 public class ArbolGeneral<T> {
 
@@ -65,9 +64,30 @@ public class ArbolGeneral<T> {
 		}
 	}
 	
-	public ListaGenericaEnlazada<T> preOrden() {
+	public ListaGenericaEnlazada<T> impresion_en_preorden() {
 		return null;
 	}
+	public ListaGenerica<T> porNiveles() {
+
+	
+		ListaGenerica<T> result = new ListaGenericaEnlazada<T>();
+	   ColaGenerica<ArbolGeneral<T>> cola= new ColaGenerica<ArbolGeneral<T>>();
+		ArbolGeneral<T> arbol_aux;
+	   cola.encolar(this);
+		while (!cola.esVacia()) {
+	   arbol_aux = cola.desencolar();
+		result.agregarFinal(arbol_aux.getDato());
+	
+		if (arbol_aux.tieneHijos()) {
+		ListaGenerica<ArbolGeneral<T>> hijos = arbol_aux.getHijos();
+		hijos.comenzar();
+		while (!hijos.fin()) {
+	   cola.encolar(hijos.proximo());
+		}
+		}
+		}
+		return result;
+	   }
 	
 	public Integer altura() {
 	

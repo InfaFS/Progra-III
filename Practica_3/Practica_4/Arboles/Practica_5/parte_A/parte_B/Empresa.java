@@ -19,34 +19,44 @@ public class Empresa {
 
 
     public int EmpleadosPorCategoria(int catego){
-       catego=catego-1;  // ya que internamente manejamos valores con 1 menos, pero la categoria arranca en 1
+        int categoriaActual=1;  // ya que internamente manejamos valores con 1 menos, pero la categoria arranca en 1
         int cant=0;
-        int niveles=0;
+      
 
-        if (!arbolJerarquico.esVacio() && catego==0){
+        if (!arbolJerarquico.esVacio() && catego==1){
             return 1;
         }
 
         ColaGenerica<ArbolGeneral<empleado>> cola= new ColaGenerica<ArbolGeneral<empleado>>();
         ArbolGeneral<empleado> arbol_aux;
         cola.encolar(this.arbolJerarquico);
+        cola.encolar(null);
         while(!cola.esVacia()) {
-       arbol_aux = cola.desencolar();
+
+        arbol_aux = cola.desencolar();
+        
+        if(arbol_aux!=null){
+        cant++;   
         if (arbol_aux.tieneHijos()) {
-            
+
         ListaGenerica<ArbolGeneral<empleado>> hijos = arbol_aux.getHijos();
         hijos.comenzar();
-        niveles++;
-            while (!hijos.fin()) {
-               if (niveles==catego){
-                cant++;
-               }
-                
+            while (!hijos.fin()) {  
                cola.encolar(hijos.proximo());
             }
-            return cant;
     
         }
+        }
+        else if (!cola.esVacia()){
+            cola.encolar(null);
+            if (categoriaActual==catego){
+                return cant;
+            }
+            
+            cant=0;
+            categoriaActual++;
+        }
+        
         
     }
    
@@ -62,9 +72,9 @@ public class Empresa {
 
     
         int cant=0;
-        int niveles=0;
-        int nivelMax=0;
-        int cantMax=0;
+        int categoriaActual=1;
+        int categoriaMax=1;
+        int cantMax=Integer.MIN_VALUE;
 
         if (!arbolJerarquico.esVacio() && !arbolJerarquico.tieneHijos()){
             return 1;
@@ -73,32 +83,40 @@ public class Empresa {
         ColaGenerica<ArbolGeneral<empleado>> cola= new ColaGenerica<ArbolGeneral<empleado>>();
         ArbolGeneral<empleado> arbol_aux;
         cola.encolar(this.arbolJerarquico);
+        cola.encolar(null);
         while(!cola.esVacia()) {
-        arbol_aux = cola.desencolar();
-        if (arbol_aux.tieneHijos()) {
+
+            arbol_aux = cola.desencolar();
             
-        ListaGenerica<ArbolGeneral<empleado>> hijos = arbol_aux.getHijos();
-        hijos.comenzar();
-        niveles++;
-            while (!hijos.fin()) {
-                cant++;
-                
-               cola.encolar(hijos.proximo());
-            }
-
-            if (cant>cantMax){
-                cantMax=cant;
-                nivelMax=niveles;
-            }
-            cant=0;
-
+            if(arbol_aux!=null){
+            cant++;   
+            if (arbol_aux.tieneHijos()) {
     
-        }
+            ListaGenerica<ArbolGeneral<empleado>> hijos = arbol_aux.getHijos();
+            hijos.comenzar();
+                while (!hijos.fin()) {  
+                   cola.encolar(hijos.proximo());
+                }
         
-    }
+            }
+            }
+            else {
+                if (cant>cantMax){
+                    cantMax=cant;
+                    categoriaMax=categoriaActual;
+                }
+                if (!cola.esVacia()){
+                cola.encolar(null);
+                cant=0;
+                categoriaActual++;
+                }
+            }
+        
+        
+        }
    
 
-        return nivelMax+1;
+        return categoriaMax;
         
 
     }
@@ -108,40 +126,73 @@ public class Empresa {
 
 
     
-        int cantTotal=0;
+        int cant=0;
       
 
         if (!arbolJerarquico.esVacio() && !arbolJerarquico.tieneHijos()){
             return 1;
         }
 
-        cantTotal++;
+        
         ColaGenerica<ArbolGeneral<empleado>> cola= new ColaGenerica<ArbolGeneral<empleado>>();
         ArbolGeneral<empleado> arbol_aux;
         cola.encolar(this.arbolJerarquico);
+        cola.encolar(null);
         while(!cola.esVacia()) {
-        arbol_aux = cola.desencolar();
-        if (arbol_aux.tieneHijos()) {
+
+            arbol_aux = cola.desencolar();
             
-        ListaGenerica<ArbolGeneral<empleado>> hijos = arbol_aux.getHijos();
-        hijos.comenzar();
-            while (!hijos.fin()) {
-                cantTotal++;
-                
-               cola.encolar(hijos.proximo());
+            if(arbol_aux!=null){
+            cant++;   
+            if (arbol_aux.tieneHijos()) {
+    
+            ListaGenerica<ArbolGeneral<empleado>> hijos = arbol_aux.getHijos();
+            hijos.comenzar();
+                while (!hijos.fin()) {  
+                   cola.encolar(hijos.proximo());
+                }
+        
+            }
+            }
+    
+        
+         }
+         
+         return cant;
+        
+
+    }
+
+    public void reemplazarPresidente(){
+        ArbolGeneral<empleado> arbol = this.arbolJerarquico;
+
+        while (arbol!=null){
+            ListaGenerica<ArbolGeneral<empleado>> lista = arbol.getHijos();
+            lista.comenzar();
+            ArbolGeneral<empleado> e = lista.proximo();
+            while(!lista.fin()){
+                ArbolGeneral<empleado> e2= lista.proximo();
+
+                if (e.getDato().getAntiguedad() < e2.getDato().getAntiguedad()){
+                    e=e2;
+                }
+            
+            }
+
+            e.getDato().setCategoria(e.getDato().getCategoria()-1);
+            arbol.setDato(e.getDato());
+            if (e.esHoja()){
+                arbol.eliminarHijo(e);
+                break;
+            }
+            arbol = e;
             }
 
 
-    
+
+
         }
-        
-    }
-   
-
-        return cantTotal;
-        
 
     }
 
     
-}
