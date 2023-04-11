@@ -12,6 +12,8 @@ public class mainArbolesGenerales {
         ArbolGeneral<Integer> arbolito5 =new ArbolGeneral<Integer>(7);
         ArbolGeneral<Integer> arbolito7 =new ArbolGeneral<Integer>(2);
         ArbolGeneral<Integer> arbolito8 =new ArbolGeneral<Integer>(7);
+        ArbolGeneral<Integer> arbolito9 =new ArbolGeneral<Integer>(7);
+
         arbolito.agregarHijo(arbolito2);
         arbolito.agregarHijo(arbolito3);
         arbolito2.agregarHijo(arbolito4);
@@ -19,6 +21,7 @@ public class mainArbolesGenerales {
         arbolito2.agregarHijo(arbolito5);
         arbolito2.agregarHijo(arbolito7);
         arbolito2.agregarHijo(arbolito8);
+        arbolito3.agregarHijo(arbolito9);
         
         
         System.out.println("Altura "+ arbolito.altura());
