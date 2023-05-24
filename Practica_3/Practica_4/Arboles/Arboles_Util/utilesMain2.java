@@ -16,6 +16,10 @@ public class utilesMain2 {
         utiles util = new utiles();
 
         ListaGenericaEnlazada<String> l = util.secuenciaConMasPreguntas(arbolBinarioB);
+        
+        while (!l.fin()){
+            System.out.println(l.proximo());
+        }
 
         
     }

@@ -1,0 +1,321 @@
+Aca listaremos los patrones que hay en los ejercicios...
+
+Patron para arboles binarios:
+
+ public int procesar(){
+        int cant=0;
+        boolean anterior=false;
+        ArbolBinario<Character> arbolitoAux = this.abinterno;
+
+       int valor=procesar_recursivo(arbolitoAux,anterior);
+
+        return valor;
+
+
+
+    }
+
+    public int procesar_recursivo(ArbolBinario<Character> arbol,boolean anterior){
+        int contador=0;
+        if (arbol.esHoja() && anterior==true){
+           return 1;
+        }
+        
+        if ((arbol.tieneHijoIzquierdo() && !arbol.tieneHijoDerecho()) || (!arbol.tieneHijoIzquierdo() && arbol.tieneHijoDerecho())){
+            anterior=true;
+        }
+        else anterior=false;
+
+        if (arbol.tieneHijoIzquierdo()){
+            contador+=procesar_recursivo(arbol.getHijoIzquierdo(),anterior);
+
+        }
+        if (arbol.tieneHijoDerecho()){
+           contador+= procesar_recursivo(arbol.getHijoDerecho(),anterior);
+        
+        }
+        return contador;
+    }
+
+El patron identificable en los ejercicios donde piden devolver contador haciendo uso de recorridos con profundidad en arboles binarios , es que:
+-Deberemos inicializar una variable que se iguale a un recorrido recursivo que haremos.
+-el recurriddo recursivo llevara un contador interno por defecto en 0
+-Si cumple la condicion se retorna 1(en este caso para aumentar contador)
+-En el recorrido al hijo izquierdo igualaremos ese contador =
+-En el caso de la parte derecha le pondremos +=
+-Retornaremos enteramente el contador
+
+En el caso de que tengamos que devolver una lista con el camino mas largo en un arbol binarios
+
+  private static void copiarLista(ListaGenerica<Character> CaminoActual, ListaGenerica<Character> caminoMax){
+        while (!caminoMax.esVacia()){
+            caminoMax.eliminarEn(caminoMax.tamanio()-1);
+        }
+    
+        caminoMax.comenzar();
+
+        while (!CaminoActual.fin()){
+            caminoMax.agregarFinal(CaminoActual.proximo());
+        }
+    }
+
+    public static ListaGenerica<Character> caminoMaslargo (ArbolBinario<Character> arbol){
+        ListaGenerica<Character> caminoActual = new ListaGenericaEnlazada<Character>();
+        ListaGenerica<Character> caminoMax = new ListaGenericaEnlazada<Character>();
+        if (arbol !=null && !arbol.esVacio()){
+            caminoActual.agregarFinal(arbol.getDato());
+            caminoMasLargoRec(caminoActual, caminoMax, arbol);
+        }
+        return caminoMax;
+    
+            
+    }
+    
+    private static void caminoMasLargoRec(ListaGenerica<Character> caminoActual, ListaGenerica<Character> caminoMax, ArbolBinario<Character> arbol){
+    
+        if (arbol.esHoja()){
+            if (caminoActual.tamanio()>caminoMax.tamanio())
+                copiarLista(caminoActual,caminoMax);
+        }
+        else{
+            if (arbol.tieneHijoIzquierdo()){
+                caminoActual.agregarFinal(arbol.getHijoIzquierdo().getDato());
+                caminoMasLargoRec(caminoActual, caminoMax, arbol.getHijoIzquierdo());
+                caminoActual.eliminarEn(caminoActual.tamanio()-1);
+    
+            }
+            if (arbol.tieneHijoDerecho()){
+                caminoActual.agregarFinal(arbol.getHijoDerecho().getDato());
+                caminoMasLargoRec(caminoActual, caminoMax, arbol.getHijoDerecho());
+                caminoActual.eliminarEn(caminoActual.tamanio()-1);
+    
+            }
+        }
+    
+    
+    
+    }
+
+Podemos identificar los siguientes patrones para cuando se trata de devolver caminos:
+-Siempre, como en el ejemplo anterior, se hace un metodo de inicializacion y uno recursivo
+-Cuando queremos devolver una lista de caminos, crearemos 2 tipos de lista,una actual que sera la que iremos agregando las cosas a medida que recorremis y la que sera la lista Final
+-En el metodo recursivo, en el caso de que sea hoja vamos a hacer un metodo donde haremos el copiado.
+-Si no es hoja, osea que arrancamos a hacer el recorrido, siempre agregaremos a la lista actual el valor del hijo que recorreremos y luego lo borraremos, esto para que en el backtracking no se agreguen elementos indeseasos a la lists que estamos itentando crearemos
+-La raiz la guardamos antes de empezar el recorrido recursivo 
+-En el caso de que queramos devolver varios caminos, haremos una lista de lista
+
+  private static void copiarLista(ListaGenerica<Character> CaminoActual, ListaGenerica<Character> caminoMax){
+        while (!caminoMax.esVacia()){
+            caminoMax.eliminarEn(caminoMax.tamanio()-1);
+        }
+    
+        caminoMax.comenzar();
+
+        while (!CaminoActual.fin()){
+            caminoMax.agregarFinal(CaminoActual.proximo());
+        }
+    }
+
+    public static ListaGenerica<ListaGenerica<Character>> caminoMaslargo (ArbolBinario<Character> arbol){
+        ListaGenerica<ListaGenerica<Character>> lista_de_listas = new ListaGenericaEnlazada<ListaGenerica<Character>>() ;
+        ListaGenerica<Character> caminoActual = new ListaGenericaEnlazada<Character>();
+        ListaGenerica<Character> caminoMax = new ListaGenericaEnlazada<Character>();
+    
+        if (arbol !=null && !arbol.esVacio()){
+            caminoActual.agregarFinal(arbol.getDato());
+            caminoMasLargoRec(caminoActual, caminoMax, arbol, lista_de_listas);
+        }
+
+        while (!lista_de_listas.esVacia()){
+            System.out.println(lista_de_listas.proximo().toString());
+        }
+        return lista_de_listas;
+    
+            
+    }
+    
+    private static void caminoMasLargoRec(ListaGenerica<Character> caminoActual, ListaGenerica<Character> caminoMax, ArbolBinario<Character> arbol, ListaGenerica<ListaGenerica<Character>> lista_de_listas){
+       
+        if (arbol.esHoja()){
+          
+            if (caminoActual.tamanio()>caminoMax.tamanio()){
+              
+                copiarLista(caminoActual,caminoMax);
+               while (!lista_de_listas.esVacia()){
+                    lista_de_listas.eliminarEn(lista_de_listas.tamanio()-1);
+               }
+               lista_de_listas.agregarFinal(caminoMax);
+            
+            }
+            else if (caminoActual.tamanio()== caminoMax.tamanio()){
+                copiarLista(caminoActual, caminoMax);
+                lista_de_listas.agregarFinal(caminoMax);
+            }
+        }
+        else{
+            if (arbol.tieneHijoIzquierdo()){
+                caminoActual.agregarFinal(arbol.getHijoIzquierdo().getDato());
+                caminoMasLargoRec(caminoActual, caminoMax, arbol.getHijoIzquierdo(),lista_de_listas);
+                caminoActual.eliminarEn(caminoActual.tamanio()-1);
+    
+            }
+            if (arbol.tieneHijoDerecho()){
+                caminoActual.agregarFinal(arbol.getHijoDerecho().getDato());
+                caminoMasLargoRec(caminoActual, caminoMax, arbol.getHijoDerecho(),lista_de_listas);
+                caminoActual.eliminarEn(caminoActual.tamanio()-1);
+    
+            }
+        }
+    
+    
+    
+    }
+
+Para cuando tenemos que hacer un recorrido por niveles en arboles binarios:
+
+    public int sumaHorizontalMax(ArbolBinario<Integer> arbol){
+        //recorrido por niveles
+        //iterativo no recursivo
+        //la cola debe ser de arboles de numeros, no de los numeros
+        //una cola es una lista, que tiene métodos que me facilitan las acciones que busco
+        int cont=0, cont_nivel=-1;//el primer nivel es el cero, el de la raiz
+        ColaGenerica<ArbolBinario<Integer>> cola = new ColaGenerica<ArbolBinario<Integer>>();
+        ArbolBinario<Integer> nodo_act = new ArbolBinario<Integer>();
+
+        cola.encolar(arbol);//encol raiz
+        cola.encolar(null);//paso de nivel
+
+        while(cola.esVacia()==false){
+            nodo_act=cola.desencolar();
+            if(nodo_act!=null){
+                cont=cont+nodo_act.getDato();
+                if(nodo_act.tieneHijoIzquierdo())
+                    cola.encolar(nodo_act.getHijoIzquierdo());
+                if(nodo_act.tieneHijoDerecho())
+                    cola.encolar(nodo_act.getHijoDerecho());
+            }
+            else{//cambio de nivel
+                cont_nivel++;
+                System.out.println("suma nivel "+cont_nivel+" = "+cont);
+                cont=0;               
+                if (cola.esVacia()==false)//si siguen habiendo niveles sigo encolando
+                    cola.encolar(null);
+            }
+		}
+
+        return cont;
+    }
+
+
+Que patrones podemos ver?:
+
+-Se utiliza siempre una cola generica y un arbol auxiliar
+-Encolamos el arbol que queremos operar y null
+-Mientras la cola no se encuentre vacia, haremos diversas operaciones
+-Preugntaremos si el arbol auxiliar no es null, si no lo es hacemos la operacion correspondiente y liuego encolamos los hijos.
+-Si es null el arbol, actualizamos contadores u operaciones y preguntamos si la cola no es vacia, si no lo es le encolamos null
+-Terminamos el programa
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////
+
+Para los arboles generales el recorrido sera POR NIVELES, por ende tenemos este codigo:;
+ public double CalcularMinimoCaudal(ArbolGeneral<Double> RedAgua, double litros){
+        ArbolGeneral<Double> arbol = RedAgua;
+        double lit=litros;
+        int cant=0;
+        ColaGenerica<ArbolGeneral<Double>> cola= new ColaGenerica<ArbolGeneral<Double>>();
+        ArbolGeneral<Double> arbol_aux;
+        cola.encolar(arbol);
+        cola.encolar(null);
+        while(!cola.esVacia()) {
+
+        arbol_aux = cola.desencolar();
+        
+        if(arbol_aux!=null){
+        cant++;   
+        if (arbol_aux.tieneHijos()) {
+
+        ListaGenerica<ArbolGeneral<Double>> hijos = arbol_aux.getHijos();
+        hijos.comenzar();
+            while (!hijos.fin()) {  
+               cola.encolar(hijos.proximo());
+            }
+    
+        }
+        }
+        else {
+            
+            lit=lit/cant;
+            
+            cant=0;
+           if  (!cola.esVacia())
+            cola.encolar(null);
+
+           
+        }
+    
+        
+    }  
+    return lit;
+    }
+    
+
+Patron a distinguir en este tipo de codigos de arboles generales:
+-Tenemos que en el recorrido de arboles generales, incluiremos una cola, una lista y un arbol auxiliar
+-A la cola le encolaremos el arbol y despues null
+-Mientras la cola no este vacia, desencolamos el elemento de la cola y operamos
+-En caso de ser un arbol, haremos alguna operacion y veremos si tiene hijos, si los tiene le asignaremos a una lista los hijos y los encolaremos
+-Si es nulo, quiere decir que pasamos de nivel, por ende haremos alguna operacion y encolaremos null
+-Luego Terminamos
+-Es interesante recalcar que a diferencia de los arboles binarios, aca utilizamos una lista para encolar los datos porque no sabemos cuantos hijo puede tener una estructura de este tipo.
+
+public int procesar2 (int K){
+        // if(this.arbol==null){//esto es por si me llegan a mandar una r bol null de una
+        //     if(K==0)
+        //         return 1;
+        //     else
+        //         return 0;
+        // }        
+
+        int cont=0;
+        if(this.arbol.esHoja()&&K==0)//si el camino cumple la condicion
+            return 1;
+        
+        if(this.arbol.tieneHijoIzquierdo()&& !this.arbol.tieneHijoDerecho()){//el nodo cumple la condicion por izquierda
+            this.arbol=this.arbol.getHijoIzquierdo();
+            K--;
+            cont+=this.procesar2(K);
+        }
+        else{
+            if(this.arbol.tieneHijoDerecho()&& !this.arbol.tieneHijoIzquierdo()){//el nodo cumple la condicion con derecha
+                this.arbol=this.arbol.getHijoDerecho();
+                K--;
+                cont+=this.procesar2(K);
+            }
+        }
+
+        if(!this.arbol.esHoja()){//tiene ambos hijos
+            ArbolBinario<Character> aux=this.arbol.getHijoDerecho();
+            this.arbol=this.arbol.getHijoIzquierdo();
+            cont+=this.procesar2(K);
+            this.arbol=aux;
+            cont+=this.procesar2(K);
+        }
+
+        return cont;
+        
+    }

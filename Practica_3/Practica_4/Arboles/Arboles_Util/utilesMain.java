@@ -25,7 +25,7 @@ public class utilesMain {
         
         listaInt = util.trayectoriaPesada(arbolBinarioB);
         
-        System.out.println(listaInt.toString());
+        
         
         
     }

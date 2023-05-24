@@ -239,6 +239,24 @@ public class ArbolBinario<T> {
         return contador;
 	}
 
+	//prueba del teorico ej4
+	public void traverse(ArbolBinario<T> a){
+
+		if (!a.esVacio()){
+			System.out.println(a.getDato());
+			if (a.tieneHijoIzquierdo()){
+				traverse(a.getHijoIzquierdo());
+			}
+
+			if (a.tieneHijoDerecho()){
+				traverse(a.getHijoDerecho());
+
+			}
+
+			System.out.println(a.getDato());
+		}
+
+	}
 
 
 }
