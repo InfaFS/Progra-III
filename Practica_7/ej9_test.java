@@ -21,7 +21,7 @@ public class ej9_test {
 
      puntos.conectar(uno, dos, 30);
      puntos.conectar(uno, cuatro, 10);
-     puntos.conectar(uno, tres, 15);
+     puntos.conectar(uno, tres, 100);//15
 
      puntos.conectar(dos, cinco, 60);
      puntos.conectar(dos, cuatro, 25);
@@ -30,15 +30,17 @@ public class ej9_test {
      puntos.conectar(cuatro, siete, 35);
      puntos.conectar(cuatro, tres, 40);
 
-     puntos.conectar(tres, seis, 20);
+     puntos.conectar(tres, seis, 50);//20
 
-     puntos.conectar(seis,siete, 30);
+     puntos.conectar(seis,siete, 99);//30
 
         GuiaDeTurismo guia = new GuiaDeTurismo();
     ListaGenerica<String> lista= guia.caminoConMenorNrodeViajes(puntos, "1", "7");
     System.out.println(lista.toString());
 
-
+        GuiaTursimo2 guia2= new GuiaTursimo2();
+        lista= guia2.caminoMenor(puntos,"1","7");
+        System.out.println(lista.toString());
 
 
 

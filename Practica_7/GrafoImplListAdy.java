@@ -28,7 +28,7 @@ public class GrafoImplListAdy<T> implements Grafo<T> {
 	@Override
 	public void conectar(Vertice<T> origen, Vertice<T> destino) {
 		((VerticeImplListAdy<T>) origen).conectar(destino);
-		((VerticeImplListAdy<T>) destino).conectar(origen);//para grafos no dirigidos
+		//((VerticeImplListAdy<T>) destino).conectar(origen);//para grafos no dirigidos
 		
 		
 	}
@@ -36,14 +36,14 @@ public class GrafoImplListAdy<T> implements Grafo<T> {
 	@Override
 	public void conectar(Vertice<T> origen, Vertice<T> destino, int peso) {
 		((VerticeImplListAdy<T>) origen).conectar(destino,peso);
-		((VerticeImplListAdy<T>) destino).conectar(origen,peso);//para grafos no dirigidos
+		//((VerticeImplListAdy<T>) destino).conectar(origen,peso);//para grafos no dirigidos
 		
 	}
 
 	@Override
 	public void desConectar(Vertice<T> origen, Vertice<T> destino) {
 		((VerticeImplListAdy<T>) origen).desconectar(destino);
-		((VerticeImplListAdy<T>) destino).desconectar(origen);//para grafos no dirigidos
+		//((VerticeImplListAdy<T>) destino).desconectar(origen);//para grafos no dirigidos
 	}
 
 	@Override

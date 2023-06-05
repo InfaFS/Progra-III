@@ -9,7 +9,7 @@ public class mapaCiudades {
 
 
     public ListaGenerica<String> devolverCamino(String ciudad1, String ciudad2) {
-        Grafo<String> grafo=this.grafo;
+      
         ListaGenerica<String> lista = new ListaGenericaEnlazada<String>();
         ListaGenerica<String> listaActual = new ListaGenericaEnlazada<String>();
 
@@ -24,9 +24,9 @@ public class mapaCiudades {
         boolean[] marca = new boolean[grafo.listaDeVertices().tamanio()]; //creo un vector que va marcando las posiciones visitadas
         boolean encontrado=false; //se pone en true si encontre mi objetivo
         int i=origen.getPosicion(); //guarda la poiscion de inicio determinada por el vertice origen
-        recorrido_1(i, grafo, marca, lista,encontrado,listaActual,ciudad2); //voy al recursivo
+       encontrado=recorrido_1(i, grafo, marca, lista,listaActual,ciudad2); //voy al recursivo
         
-        if (encontrado=false){
+        if (encontrado==false){
             return new ListaGenericaEnlazada<>();
         }
 
@@ -37,8 +37,9 @@ public class mapaCiudades {
 
     
 
-    private boolean recorrido_1(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista ,boolean encontrado, ListaGenerica<String> listaActual, String ciudad2) {
+    private boolean recorrido_1(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista, ListaGenerica<String> listaActual, String ciudad2) {
         marca[i] = true;
+        boolean encontrado=false;
         Vertice<String> v = grafo.listaDeVertices().elemento(i);  
         //parto desde el vertice de la posicion origen
         listaActual.agregarFinal(v.dato()); //agrego a la lista actual que se ira borrando el primer dato
@@ -52,8 +53,7 @@ public class mapaCiudades {
                 lista.agregarFinal(listaActual.proximo());
                 
             }
-            encontrado=true;
-            return encontrado;
+            return true;
         
 
         }
@@ -62,12 +62,13 @@ public class mapaCiudades {
         while (!ady.fin()) {
             int j = ady.proximo().getVerticeDestino().getPosicion();
             if (!marca[j] && !encontrado) {
-                encontrado=recorrido_1(j, grafo, marca, lista,encontrado,listaActual,ciudad2); 
+                encontrado=recorrido_1(j, grafo, marca, lista,listaActual,ciudad2); 
             }
-            listaActual.eliminarEn(listaActual.tamanio()-1); //al volver de la recursion boror de la lista actual
-            marca[j]=false; //desmarco porel que pase
+          
+           // marca[j]=false; //desmarco porel que pase
         }   
-        
+        listaActual.eliminarEn(listaActual.tamanio()-1); //al volver de la recursion boror de la lista actual
+        marca[i]=false;
         return encontrado;
         
     }
@@ -75,7 +76,6 @@ public class mapaCiudades {
 
 
     public ListaGenerica<String> devolverCaminoExceptuando(String ciudad1, String ciudad2, ListaGenerica<String> lista_ciudades) {
-        Grafo<String> grafo=this.grafo;
         ListaGenerica<String> listaRet = new ListaGenericaEnlazada<String>();
         ListaGenerica<String> listaActual = new ListaGenericaEnlazada<String>();
 
@@ -104,9 +104,9 @@ public class mapaCiudades {
 
         
 
-        recorrido_2(i, grafo, marca, listaRet,encontrado,listaActual,lista_ciudades,baneadas,ciudad2); //recorro
+       encontrado= recorrido_2(i, grafo, marca, listaRet,listaActual,lista_ciudades,baneadas,ciudad2); //recorro
         
-        if (encontrado=false){
+        if (encontrado==false){
             return new ListaGenericaEnlazada<>();
         }
 
@@ -115,7 +115,8 @@ public class mapaCiudades {
     }
 
 
-    private void recorrido_2(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista ,boolean encontrado, ListaGenerica<String> listaActual, ListaGenerica<String> lista_ciudades, boolean [] baneadas,String ciudad2) {
+    private boolean recorrido_2(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista , ListaGenerica<String> listaActual, ListaGenerica<String> lista_ciudades, boolean [] baneadas,String ciudad2) {
+       boolean encontrado=false;
         marca[i] = true;
         Vertice<String> v = grafo.listaDeVertices().elemento(i);  
 
@@ -130,31 +131,30 @@ public class mapaCiudades {
                 lista.agregarFinal(listaActual.proximo());
                 
             }
-            encontrado=true;
+            return true;
         
 
         }
-        boolean entre=false; //uso un entre para que no me borre elementos en casa de que una de las ciudades adyacentes este baneada en el backtraking
+    
         ListaGenerica<Arista<String>> ady = grafo.listaDeAdyacentes(v);
         ady.comenzar();
         while (!ady.fin()) {
             int j = ady.proximo().getVerticeDestino().getPosicion();
             if (!marca[j] && !baneadas[j]) {
                 
-                entre=true; //si no esta baneada ni visitada,voy a la recursion
-                recorrido_2(j, grafo, marca, lista,encontrado,listaActual,lista_ciudades,baneadas,ciudad2); 
+               encontrado= recorrido_2(j, grafo, marca, lista,listaActual,lista_ciudades,baneadas,ciudad2); 
+  
             }
-            if (entre){ //si entre elimino el que cargue antes de volver
-                listaActual.eliminarEn(listaActual.tamanio()-1);
-            }
-            marca[j]=false; //pongo que no visite el otro
+    
+           // marca[j]=false; //pongo que no visite el otro
         }
-        
+        listaActual.eliminarEn(listaActual.tamanio()-1); //si entre elimino el que cargue antes de volver
+        marca[i]=false;
+        return encontrado;
     }
 
     public ListaGenerica<String> CaminoMasCorto(String ciudad1, String ciudad2) {
        
-        ListaGenerica <Arista<String>> listaActual_aristas = new ListaGenericaEnlazada<Arista<String>>();
         ListaGenerica <String> listaMinima_ciudades= new ListaGenericaEnlazada<String>();
         ListaGenerica <String> listaActual_ciudades= new ListaGenericaEnlazada<String>();
     
@@ -169,18 +169,65 @@ public class mapaCiudades {
         }
 
         boolean[] marca = new boolean[grafo.listaDeVertices().tamanio()]; //creo un vector que va marcando las posiciones visitadas
-        boolean encontrado=false; //se pone en true si encontre mi objetivo
+    // boolean encontrado=false; //se pone en true si encontre mi objetivo
         int i=origen.getPosicion(); //guarda la poiscion de inicio determinada por el vertice origen
         valorMin valorminimo = new valorMin();
+        int valor_actual=0;
         valorminimo.setValorMin(9999); //usamos un objeto para ir seteando el minimo a medida y relacionarlo con el camino a devolver
-       boolean found= recorrido_3(i, grafo, marca, listaMinima_ciudades,encontrado,listaActual_ciudades,ciudad2,listaActual_aristas,valorminimo); //voy al recursivo
+       boolean found= recorrido_3(i, grafo, marca, listaMinima_ciudades,listaActual_ciudades,ciudad2,valor_actual,valorminimo); //voy al recursivo
         
-        if (found=false){
-            return new ListaGenericaEnlazada<>();
-        }
+        //if (found==false){ //hay conflicto con el backtracking
+          //  return new ListaGenericaEnlazada<>();
+        //}
 
     
         return listaMinima_ciudades; 
+    }
+
+    private boolean  recorrido_3(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista , ListaGenerica<String> listaActual,String ciudad2,int valor_actual,valorMin valorminimo) {
+        marca[i] = true;
+       boolean encontrado=false;
+        Vertice<String> v = grafo.listaDeVertices().elemento(i);  
+
+        listaActual.agregarFinal(v.dato());
+
+        if (v.dato().equals(ciudad2)){//modificar por una variable
+        
+
+            if (valor_actual<valorminimo.getValorMin()){
+                valorminimo.setValorMin(valor_actual);
+                listaActual.comenzar();
+
+                while (!lista.esVacia()){
+                    lista.eliminarEn(lista.tamanio()-1);
+                }
+                while (!listaActual.fin()){
+                    lista.agregarFinal(listaActual.proximo());
+                    
+                }
+               return true;
+            
+            }
+
+        }
+        ListaGenerica<Arista<String>> ady = grafo.listaDeAdyacentes(v);
+        ady.comenzar();
+        while (!ady.fin()) {
+            Arista<String> arista= ady.proximo();
+            int j = arista.getVerticeDestino().getPosicion();
+            if (!marca[j]) {
+                
+              encontrado=recorrido_3(j, grafo, marca, lista,listaActual,ciudad2,(valor_actual+arista.peso()),valorminimo); 
+              marca[j]=false; //pongo que no visite el otro
+              
+            }
+            listaActual.eliminarEn(listaActual.tamanio()-1); //se tiene que borrar aca para que no cause ningun error inesperado..
+    
+    
+        }
+        marca[i]=false;
+        return encontrado;
+
     }
 
     public ListaGenerica<String> caminoSinCargarCombustible(String ciudad1, String ciudad2, int Tanque) {
@@ -215,55 +262,6 @@ public class mapaCiudades {
 
 
 
-
-
-    private boolean  recorrido_3(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista ,boolean encontrado, ListaGenerica<String> listaActual,String ciudad2,ListaGenerica <Arista<String>> listaActual_aristas,valorMin valorminimo) {
-        marca[i] = true;
-        Vertice<String> v = grafo.listaDeVertices().elemento(i);  
-
-        listaActual.agregarFinal(v.dato());
-
-        if (v.dato().equals(ciudad2)){//modificar por una variable
-            int peso_actual=0;
-            listaActual_aristas.comenzar();
-            while(!listaActual_aristas.fin()){
-                peso_actual+=listaActual_aristas.proximo().peso();
-            }
-
-            if (peso_actual<valorminimo.getValorMin()){
-                valorminimo.setValorMin(peso_actual);
-                listaActual.comenzar();
-
-                while (!lista.esVacia()){
-                    lista.eliminarEn(lista.tamanio()-1);
-                }
-                while (!listaActual.fin()){
-                    lista.agregarFinal(listaActual.proximo());
-                    
-                }
-                encontrado=true;
-                return encontrado;
-            
-            }
-
-        }
-        ListaGenerica<Arista<String>> ady = grafo.listaDeAdyacentes(v);
-        ady.comenzar();
-        while (!ady.fin()) {
-            Arista<String> arista= ady.proximo();
-            int j = arista.getVerticeDestino().getPosicion();
-            if (!marca[j]) {
-                listaActual_aristas.agregarFinal(arista);
-              encontrado=recorrido_3(j, grafo, marca, lista,encontrado,listaActual,ciudad2,listaActual_aristas,valorminimo); 
-            }
-    
-            listaActual.eliminarEn(listaActual.tamanio()-1);
-            listaActual_aristas.eliminarEn(listaActual_aristas.tamanio()-1);
-            marca[j]=false; //pongo que no visite el otro
-        }
-        return encontrado;
-
-    }
 
 
     private boolean recorrido_4(int i, Grafo<String> grafo, boolean[] marca, ListaGenerica<String> lista ,boolean encontrado, ListaGenerica<String> listaActual, String ciudad2, valorMin TanqueAuto) {

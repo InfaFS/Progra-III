@@ -20,10 +20,10 @@ public class RecorridosTest {
 
      ciudades.conectar(v1, v3, 3);
      ciudades.conectar(v1, v2, 2);
-     ciudades.conectar(v3, v4, 2);
+     ciudades.conectar(v3, v4, 14);
      ciudades.conectar(v4, v7, 1);
      ciudades.conectar(v2, v6, 0);
-     ciudades.conectar(v6, v5, 1);
+     ciudades.conectar(v6, v5, 8);
      ciudades.conectar(v7, v5, 0);
      ListaGenerica<String> ciudades_baneadas= new ListaGenericaEnlazada<String>();
 
@@ -33,7 +33,8 @@ public class RecorridosTest {
      System.out.println("Camino devuelto: ");
      System.out.println(l.toString());
      
-     ciudades_baneadas.agregarFinal("Madagascar");
+     ciudades_baneadas.agregarFinal("London");
+
      System.out.println("Camino devuelto: ");
      l=mapa.devolverCaminoExceptuando("Buenos Aires", "New York", ciudades_baneadas);
      System.out.println(l.toString());
@@ -47,13 +48,13 @@ public class RecorridosTest {
     System.out.println("Camino devuelto: ");
     System.out.println(l.toString());  
     
-    System.out.println("Camino devuelto: ");
-    l=mapa.caminoSinCargarCombustible("Buenos Aires","New York",100);// no se si esta bien, hay que chequearlo
-    System.out.println(l.toString());  
+   // System.out.println("Camino devuelto: ");
+    //l=mapa.caminoSinCargarCombustible("Buenos Aires","New York",100);// no se si esta bien, hay que chequearlo
+    //System.out.println(l.toString());  
     
 
-    l=mapa.caminoCargandoCombustible("Buenos Aires","New York",100);// no se si esta bien, hay que chequearlo
-    System.out.println("Camino devuelto: ");
-    System.out.println(l.toString());  
+    //l=mapa.caminoCargandoCombustible("Buenos Aires","New York",100);// no se si esta bien, hay que chequearlo
+    //System.out.println("Camino devuelto: ");
+    //System.out.println(l.toString());  
      }
     }

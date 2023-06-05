@@ -1,4 +1,3 @@
-import javax.swing.event.ListDataListener;
 
 public class GuiaDeTurismo {
     
@@ -67,7 +66,9 @@ public class GuiaDeTurismo {
         ady.comenzar();
         while (!ady.fin()) {
             Arista<String> arista= ady.proximo();
-        
+            if (i==0){
+                pesoMin=9999;        //ver despues 
+            }            
             int j = arista.getVerticeDestino().getPosicion();
             if (!marca[j]) {
                System.out.println(arista.peso());
